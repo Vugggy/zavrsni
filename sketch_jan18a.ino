@@ -1,36 +1,35 @@
+//ukljucimo library
 #include <Stepper.h>
 #include <LiquidCrystal_I2C.h> 
-// Define Constants
+
+// definiramo konstante
 
 
- 
-// Number of steps per output rotation
-const int STEPS_PER_REV = 500;
+const int STEPS_PER_REV = 500; // broj koraka pri jenonj rotaciji
 const int SPEED_CONTROL = A0;
 
 
-LiquidCrystal_I2C lcd(0x27, 16, 2); // I2C address 0x27, 16 column and 2 rows
+LiquidCrystal_I2C lcd(0x27, 16, 2); // I2C adresa 0x27, 16 stupaca 2 reda
 Stepper stepper(STEPS_PER_REV, 1, 3, 2, 4);
  
 void setup() {
-  // nothing to do inside the void setup
-  lcd.init(); // initialize the lcd
+  lcd.init(); // inicijaliziramo led
   lcd.backlight();
 }
  
 void loop() {
-  // read the sensor value:
+  // čitamo vrijednost na potenciometru:
   int sensorReading = analogRead(SPEED_CONTROL);
-  // map it to a range from 0 to 100:
+  // mapiramo ga u rasponu od 0 do 100
   int motorSpeed = map(sensorReading, 0, 1023, 0, 100);
-  // set the motor speed:
+  // brzina motora
   if (motorSpeed > 0) {
     stepper.setSpeed(motorSpeed);
-    // step 1/100 of a revolution:
+    // korak 1/100 od revolucije
     stepper.step(STEPS_PER_REV / 100);
   }
 
-  lcd.clear();                 // clear display
-  lcd.setCursor(0, 0);         // move cursor to   (0, 0)
+  lcd.clear();                 // očistimo display
+  lcd.setCursor(0, 0);         // cursor pomaknemo na (0,0)
   lcd.print(sensorReading);
 }
